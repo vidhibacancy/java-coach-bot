@@ -16,6 +16,7 @@ Two separate indexes, two separate jobs:
 import os
 import re
 import json
+import time
 import logging
 import hashlib
 
@@ -30,13 +31,16 @@ logging.getLogger("google_genai.models").setLevel(logging.ERROR)
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "questions.json")
 CONCEPTS_PATH = os.path.join(os.path.dirname(__file__), "data", "concepts.md")
-EMBEDDING_CACHE_PATH = os.path.join(os.path.dirname(__file__), ".cache", "embeddings.json")
+EMBEDDING_CACHE_PATH = os.path.join(os.path.dirname(__file__), "data", "embeddings_cache.json")
 
 
 class CachedEmbeddings(Embeddings):
-    """Wraps an embeddings model with a local on-disk cache keyed by content
-    hash, so re-embedding the same question bank on every restart doesn't
-    burn API quota - only genuinely new/changed text triggers a real call."""
+    """Wraps an embeddings model with a disk cache keyed by content hash, so
+    re-embedding the same question bank on every restart doesn't burn API
+    quota - only genuinely new/changed text triggers a real call. The cache
+    file lives under data/ and is committed to the repo (baked in), so a
+    fresh deploy with an ephemeral filesystem still starts with zero
+    embedding API calls needed, instead of just a local machine's cache."""
 
     def __init__(self, embeddings, cache_path, model_name):
         self._embeddings = embeddings
@@ -72,12 +76,23 @@ class CachedEmbeddings(Embeddings):
                 missing_texts.append(text)
                 missing_indices.append(i)
 
-        if missing_texts:
-            fresh = self._embeddings.embed_documents(missing_texts)
-            for idx, text, vector in zip(missing_indices, missing_texts, fresh):
+        # Embed in small batches with a short pause between them, saving
+        # progress after each one - keeps each call comfortably under the
+        # embeddings API's per-minute quota, and means a mid-way rate limit
+        # only costs the current batch, not everything embedded so far.
+        batch_size = 20
+        for start in range(0, len(missing_texts), batch_size):
+            batch_texts = missing_texts[start:start + batch_size]
+            batch_indices = missing_indices[start:start + batch_size]
+
+            fresh = self._embeddings.embed_documents(batch_texts)
+            for idx, text, vector in zip(batch_indices, batch_texts, fresh):
                 vectors[idx] = vector
                 self._cache[self._key(text)] = vector
             self._save()
+
+            if start + batch_size < len(missing_texts):
+                time.sleep(2)
 
         return vectors
 

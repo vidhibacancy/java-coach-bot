@@ -94,14 +94,22 @@ blindly cutting by character count from the start. The question index is
 kept separate and unchunked, since it exists purely to find/browse
 questions, not to answer them.
 
-### Embedding cache
+### Embedding cache (baked in)
 
 Every restart would otherwise re-embed all 50 questions + 182 knowledge
 chunks, burning API quota for no reason since the data rarely changes.
 `bot_core.py` wraps the embeddings model in `CachedEmbeddings`, which
-stores every vector in `.cache/embeddings.json`, keyed by a hash of
+stores every vector in `data/embeddings_cache.json`, keyed by a hash of
 `(model name, text)`. Only genuinely new or changed text triggers a real
 API call after the first run.
+
+This file is **committed to the repo** (not gitignored) on purpose: it
+means a fresh clone, CI run, or deployment on a host with an ephemeral
+filesystem (serverless functions, Render/Railway free tiers, etc.) starts
+up instantly with **zero embedding API calls needed**, instead of
+re-embedding everything from scratch on every cold start. If you add or
+change questions/concepts, run the app once locally to fill in the new
+vectors, then commit the updated `embeddings_cache.json` before deploying.
 
 ## Setup
 
