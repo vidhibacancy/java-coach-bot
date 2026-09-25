@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Java Interview Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">☕</span>
+      <div>
+        <h1>Interview Coach</h1>
+        <p class="subtitle">Java practice, powered by Gemini</p>
+      </div>
+    </div>
+
+    <button id="new-chat-btn" class="btn btn-new-chat" type="button">
+      <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+      New chat
+    </button>
+
+    <div class="panel">
+      <label for="topic-input">Topic</label>
+      <input id="topic-input" type="text" placeholder="e.g. multithreading, Spring Boot" autocomplete="off" />
+      <button id="qbank-btn" class="btn btn-accent" type="button">Question Bank</button>
+      <div class="topics-panel" id="topics-panel" hidden></div>
+    </div>
+
+    <p class="section-label">Recent chats</p>
+    <div class="conversations" id="conversations"></div>
+
+    <div class="meta" id="question-count"></div>
+  </aside>
+
+  <main class="chat">
+    <div class="messages" id="messages">
+      <div class="messages-inner" id="messages-inner">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">☕</div>
+          <h2>Ready when you are</h2>
+          <p>Browse the question bank, or try one of these:</p>
+          <div class="suggestions">
+            <button type="button" class="suggestion-chip" data-text="What is the difference between == and .equals() in Java?">What is the difference between == and .equals()?</button>
+            <button type="button" class="suggestion-chip" data-text="Explain checked vs unchecked exceptions in Java">Checked vs unchecked exceptions</button>
+            <button type="button" class="suggestion-chip" data-text="Explain the Java memory model">Java memory model</button>
+            <button type="button" class="suggestion-chip" data-text="What is dependency injection in Spring?">Dependency injection in Spring</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="composer" id="composer">
+      <div class="composer-inner">
+        <input id="chat-input" type="text" autocomplete="off" placeholder="Ask a Java question..." />
+        <button type="submit" class="send-btn" aria-label="Send">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

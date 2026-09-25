@@ -1,0 +1,402 @@
+[
+  {
+    "id": "q001",
+    "question": "What is the difference between HashMap and ConcurrentHashMap?",
+    "topic": "Collections & Multithreading",
+    "difficulty": "Medium",
+    "explanation": "HashMap is not thread-safe — concurrent writes can corrupt its internal structure or cause infinite loops during resizing. ConcurrentHashMap achieves thread safety by partitioning the map into segments/buckets and locking only the relevant bucket during a write, rather than locking the whole map. This allows concurrent reads and limited concurrent writes without blocking the entire structure.",
+    "follow_up": "How does ConcurrentHashMap achieve thread safety internally in Java 8+?"
+  },
+  {
+    "id": "q002",
+    "question": "Explain the producer-consumer problem and how you'd implement it in Java.",
+    "topic": "Multithreading",
+    "difficulty": "Medium",
+    "explanation": "The producer-consumer problem involves one or more threads producing data into a shared buffer and one or more threads consuming it, while avoiding race conditions, buffer overflow, and buffer underflow. In Java, it's commonly implemented using a BlockingQueue (like ArrayBlockingQueue or LinkedBlockingQueue), which internally handles the wait/notify logic so producers block when the queue is full and consumers block when it's empty.",
+    "follow_up": "How would you implement this manually using wait() and notify() instead of BlockingQueue?"
+  },
+  {
+    "id": "q003",
+    "question": "What happens if you call start() twice on the same thread?",
+    "topic": "Multithreading",
+    "difficulty": "Easy",
+    "explanation": "Calling start() a second time on the same Thread object throws an IllegalThreadStateException. A thread can only be started once — once it has run (or is running), it cannot be restarted, because its internal state no longer represents a 'new' thread.",
+    "follow_up": "What's the difference between calling run() directly versus calling start()?"
+  },
+  {
+    "id": "q004",
+    "question": "What's the difference between synchronized and ReentrantLock?",
+    "topic": "Multithreading",
+    "difficulty": "Medium",
+    "explanation": "synchronized is a built-in keyword that provides a simple, automatically-released lock tied to a block or method. ReentrantLock is a class offering more control: it supports try-lock with timeout, interruptible lock acquisition, fairness policies, and multiple condition variables. The tradeoff is that ReentrantLock must be manually released in a finally block, whereas synchronized releases automatically even on exceptions.",
+    "follow_up": "When would you choose ReentrantLock over synchronized in a real system?"
+  },
+  {
+    "id": "q005",
+    "question": "What is the difference between constructor injection and field injection in Spring, and why is constructor injection generally preferred?",
+    "topic": "Spring Boot",
+    "difficulty": "Medium",
+    "explanation": "Field injection uses @Autowired directly on a class field, while constructor injection passes dependencies through the constructor. Constructor injection is preferred because it makes dependencies explicit and immutable (final fields), allows the object to fail fast at startup if a dependency is missing, and makes unit testing easier since you can pass mocks directly without relying on a Spring context.",
+    "follow_up": "How does Spring resolve circular dependencies with constructor injection, and why can it fail?"
+  },
+  {
+    "id": "q006",
+    "question": "What is the Spring Bean lifecycle?",
+    "topic": "Spring Boot",
+    "difficulty": "Medium",
+    "explanation": "A Spring bean goes through: instantiation, populating properties/dependencies, calling Aware interfaces (like BeanNameAware), calling BeanPostProcessor's before-init methods, calling @PostConstruct or InitializingBean's afterPropertiesSet(), then the bean is ready for use, and finally @PreDestroy or DisposableBean's destroy() is called during shutdown.",
+    "follow_up": "What's the difference between @PostConstruct and a constructor for initialization logic?"
+  },
+  {
+    "id": "q007",
+    "question": "What's the difference between @Component, @Service, and @Repository in Spring?",
+    "topic": "Spring Boot",
+    "difficulty": "Easy",
+    "explanation": "All three are stereotype annotations that register a class as a Spring bean, and functionally @Component is the base. @Service and @Repository add semantic meaning: @Service marks business logic layers, and @Repository additionally enables automatic exception translation, converting database-specific exceptions into Spring's DataAccessException hierarchy.",
+    "follow_up": "What actually happens under the hood when @Repository translates a SQLException?"
+  },
+  {
+    "id": "q008",
+    "question": "Explain how garbage collection works in the JVM, at a high level.",
+    "topic": "JVM Internals",
+    "difficulty": "Medium",
+    "explanation": "The JVM heap is divided into generations — Young (further split into Eden and Survivor spaces) and Old. Most objects die young, so minor GC runs frequently on the Young generation using a copying algorithm. Objects that survive several minor GCs are promoted to the Old generation, which is collected less often using algorithms like mark-sweep-compact. The exact algorithm depends on the collector (G1, ZGC, Parallel, etc.).",
+    "follow_up": "What's the difference between a minor GC and a major/full GC, and why are full GCs more expensive?"
+  },
+  {
+    "id": "q009",
+    "question": "What is the difference between the stack and the heap in Java memory management?",
+    "topic": "JVM Internals",
+    "difficulty": "Easy",
+    "explanation": "The stack stores method call frames, local variables, and object references, and is thread-specific — each thread gets its own stack. The heap stores actual objects and is shared across all threads. Stack memory is automatically reclaimed when a method returns; heap memory is reclaimed by the garbage collector.",
+    "follow_up": "What causes a StackOverflowError versus an OutOfMemoryError?"
+  },
+  {
+    "id": "q010",
+    "question": "What are strong, weak, soft, and phantom references in Java?",
+    "topic": "JVM Internals",
+    "difficulty": "Hard",
+    "explanation": "A strong reference prevents an object from being garbage collected. A soft reference allows collection only when memory is low (useful for caches). A weak reference allows collection as soon as no strong references exist, regardless of memory pressure (useful for WeakHashMap). A phantom reference doesn't allow access to the object at all and is used to schedule post-mortem cleanup actions after finalization.",
+    "follow_up": "Where would you practically use a WeakReference in an application?"
+  },
+  {
+    "id": "q011",
+    "question": "What is the difference between an ArrayList and a LinkedList in Java?",
+    "topic": "Collections",
+    "difficulty": "Easy",
+    "explanation": "ArrayList is backed by a dynamic array, giving O(1) random access but O(n) insertion/removal in the middle since elements need to shift. LinkedList is a doubly-linked list, giving O(1) insertion/removal once you have a reference to the node, but O(n) random access since you must traverse from an end.",
+    "follow_up": "Why is LinkedList rarely the better choice in practice despite its theoretical insertion advantage?"
+  },
+  {
+    "id": "q012",
+    "question": "How does HashMap handle collisions internally?",
+    "topic": "Collections",
+    "difficulty": "Medium",
+    "explanation": "When two keys hash to the same bucket, HashMap stores them as a linked list of entries in that bucket (chaining). Since Java 8, if a single bucket's linked list grows beyond a threshold (default 8) and the table is large enough, it's converted into a red-black tree to improve worst-case lookup from O(n) to O(log n).",
+    "follow_up": "What role does a key's hashCode() and equals() play in this process, and what happens if they're implemented incorrectly?"
+  },
+  {
+    "id": "q013",
+    "question": "What is the difference between Comparable and Comparator in Java?",
+    "topic": "Collections",
+    "difficulty": "Easy",
+    "explanation": "Comparable is implemented by the class itself to define its 'natural ordering' via compareTo(), and a class can only have one natural ordering. Comparator is a separate class that defines an ordering externally via compare(), letting you define multiple different orderings for the same class without modifying it.",
+    "follow_up": "How would you sort a list by multiple fields using Comparator chaining?"
+  },
+  {
+    "id": "q014",
+    "question": "What is the difference between fail-fast and fail-safe iterators?",
+    "topic": "Collections",
+    "difficulty": "Medium",
+    "explanation": "Fail-fast iterators (like those from ArrayList or HashMap) throw a ConcurrentModificationException if the collection is structurally modified while iterating, because they check a modCount. Fail-safe iterators (like those from CopyOnWriteArrayList or ConcurrentHashMap) operate on a snapshot or allow safe concurrent modification, so they don't throw this exception, though you may not see the most recent updates.",
+    "follow_up": "Why does CopyOnWriteArrayList avoid ConcurrentModificationException, and what's the tradeoff of using it?"
+  },
+  {
+    "id": "q015",
+    "question": "What is normalization in database design, and can you explain 1NF, 2NF, and 3NF?",
+    "topic": "SQL & Databases",
+    "difficulty": "Medium",
+    "explanation": "Normalization organizes data to reduce redundancy. 1NF requires atomic column values and no repeating groups. 2NF requires 1NF plus no partial dependency of non-key attributes on part of a composite primary key. 3NF requires 2NF plus no transitive dependency, meaning non-key attributes depend only on the primary key, not on other non-key attributes.",
+    "follow_up": "Can you give a concrete example of a table that violates 2NF and how you'd fix it?"
+  },
+  {
+    "id": "q016",
+    "question": "What is the difference between INNER JOIN, LEFT JOIN, and FULL OUTER JOIN?",
+    "topic": "SQL & Databases",
+    "difficulty": "Easy",
+    "explanation": "INNER JOIN returns only rows with matching values in both tables. LEFT JOIN returns all rows from the left table plus matched rows from the right (with NULLs where there's no match). FULL OUTER JOIN returns all rows from both tables, with NULLs on whichever side lacks a match.",
+    "follow_up": "How would you write a query to find rows that exist in the left table but have no match in the right table?"
+  },
+  {
+    "id": "q017",
+    "question": "What is an index in a database, and what's the tradeoff of adding one?",
+    "topic": "SQL & Databases",
+    "difficulty": "Medium",
+    "explanation": "An index is a data structure (commonly a B-tree) that speeds up lookups on a column by avoiding a full table scan. The tradeoff is that indexes consume additional storage and slow down write operations (INSERT/UPDATE/DELETE), since the index must be updated alongside the table data.",
+    "follow_up": "How would you decide which columns to index on a large, frequently-written table?"
+  },
+  {
+    "id": "q018",
+    "question": "What is the difference between abstract classes and interfaces in Java, especially after Java 8?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Easy",
+    "explanation": "An abstract class can have constructors, instance fields, and a mix of abstract and concrete methods, but a class can extend only one abstract class. An interface, since Java 8, can have default and static methods with implementations, but still cannot hold instance state, and a class can implement multiple interfaces. Interfaces define 'what' a class can do; abstract classes can also define 'how' with shared state.",
+    "follow_up": "When would you choose an abstract class over an interface with default methods?"
+  },
+  {
+    "id": "q019",
+    "question": "What is the difference between method overloading and method overriding?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Easy",
+    "explanation": "Overloading occurs when multiple methods share the same name but differ in parameter list, within the same class, and is resolved at compile time. Overriding occurs when a subclass provides a specific implementation of a method already defined in its superclass, with the same signature, and is resolved at runtime through dynamic dispatch.",
+    "follow_up": "Can you override a private or static method in Java? Why or why not?"
+  },
+  {
+    "id": "q020",
+    "question": "Explain the SOLID principles briefly.",
+    "topic": "OOP & Design Principles",
+    "difficulty": "Medium",
+    "explanation": "Single Responsibility: a class should have one reason to change. Open/Closed: classes should be open for extension but closed for modification. Liskov Substitution: subtypes must be substitutable for their base types without breaking correctness. Interface Segregation: prefer many small specific interfaces over one large general one. Dependency Inversion: depend on abstractions, not concrete implementations.",
+    "follow_up": "Can you give an example of a Liskov Substitution Principle violation you've seen in real code?"
+  },
+  {
+    "id": "q021",
+    "question": "What is the difference between microservices and a monolithic architecture?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Medium",
+    "explanation": "A monolith is a single deployable unit containing all application logic, which is simpler to develop and deploy initially but harder to scale and update independently. Microservices split the application into independently deployable services, each owning its own data and logic, enabling independent scaling and technology choices, at the cost of added complexity in networking, data consistency, and operations.",
+    "follow_up": "How do microservices typically handle data consistency across services without a shared database?"
+  },
+  {
+    "id": "q022",
+    "question": "How does service discovery work in a microservices architecture?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Medium",
+    "explanation": "Service discovery allows services to find each other's network locations dynamically instead of hardcoding IPs/ports. In client-side discovery, the client queries a registry (like Eureka or Consul) directly. In server-side discovery, a load balancer or API gateway queries the registry on the client's behalf and routes the request. Services register themselves with the registry on startup and send periodic heartbeats.",
+    "follow_up": "What happens if the service registry itself goes down — how do systems handle this?"
+  },
+  {
+    "id": "q023",
+    "question": "What is the Circuit Breaker pattern, and why is it used in microservices?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Medium",
+    "explanation": "The Circuit Breaker pattern prevents a service from repeatedly calling a downstream dependency that's failing, which could waste resources and cause cascading failures. After a failure threshold is crossed, the circuit 'opens' and fails fast without calling the dependency, then periodically allows a trial request through ('half-open') to check if the dependency has recovered before fully 'closing' the circuit again.",
+    "follow_up": "How would you implement this in a Spring Boot application (e.g. using Resilience4j)?"
+  },
+  {
+    "id": "q024",
+    "question": "Given a string, find the first non-repeating character. How would you approach this?",
+    "topic": "DSA",
+    "difficulty": "Easy",
+    "explanation": "Use a LinkedHashMap or an array (for ASCII) to count character frequencies in one pass, preserving insertion order. Then iterate through the string a second time and return the first character whose count is 1. This runs in O(n) time and O(1) extra space if the character set is bounded (like ASCII).",
+    "follow_up": "How would you solve this if you could only make a single pass through the string?"
+  },
+  {
+    "id": "q025",
+    "question": "How would you detect a cycle in a linked list?",
+    "topic": "DSA",
+    "difficulty": "Medium",
+    "explanation": "Floyd's Cycle Detection Algorithm (the 'tortoise and hare' approach) uses two pointers moving at different speeds — one step and two steps at a time. If there's a cycle, the fast pointer will eventually meet the slow pointer inside the loop. If the fast pointer reaches null, there's no cycle. This runs in O(n) time and O(1) space.",
+    "follow_up": "Once a cycle is detected, how would you find the exact starting node of the cycle?"
+  },
+  {
+    "id": "q026",
+    "question": "What is the time complexity of quicksort in the average and worst case, and why?",
+    "topic": "DSA",
+    "difficulty": "Medium",
+    "explanation": "Quicksort averages O(n log n) because a well-chosen pivot splits the array roughly in half each time, giving log n levels of partitioning, each doing O(n) work. In the worst case (already sorted data with a poor pivot choice, like always picking the first element), it degrades to O(n^2) because each partition only removes one element, resulting in n levels.",
+    "follow_up": "How does using a random or median-of-three pivot selection help avoid the worst case?"
+  },
+  {
+    "id": "q027",
+    "question": "How would you find the top K frequent elements in an array efficiently?",
+    "topic": "DSA",
+    "difficulty": "Medium",
+    "explanation": "First build a frequency map in O(n) time using a HashMap. Then use a min-heap of size K: iterate through the frequency map, and for each element, push it onto the heap, popping the smallest if the heap exceeds size K. This gives O(n log k) time overall, which is better than sorting all elements when k is much smaller than n.",
+    "follow_up": "How would bucket sort be used to solve this in O(n) time instead?"
+  },
+  {
+    "id": "q028",
+    "question": "What is the difference between checked and unchecked exceptions in Java?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Easy",
+    "explanation": "Checked exceptions (like IOException) are checked at compile time — the method must either handle them or declare them with 'throws'. Unchecked exceptions (subclasses of RuntimeException, like NullPointerException) are not checked at compile time and don't need to be declared, typically representing programming errors rather than recoverable conditions.",
+    "follow_up": "Why do many modern frameworks and libraries lean toward unchecked exceptions?"
+  },
+  {
+    "id": "q029",
+    "question": "What is the N+1 query problem in JPA/Hibernate, and how do you fix it?",
+    "topic": "Spring Boot",
+    "difficulty": "Medium",
+    "explanation": "The N+1 problem occurs when fetching a list of N parent entities triggers 1 query for the parents plus N additional queries, one per parent, to lazily fetch a related child collection. It's fixed by using JOIN FETCH in a JPQL query, using @EntityGraph to specify eager loading for a specific query, or batch fetching configuration to fetch related entities in fewer queries.",
+    "follow_up": "What's the difference between FetchType.LAZY and FetchType.EAGER, and why is LAZY usually the safer default?"
+  },
+  {
+    "id": "q030",
+    "question": "What is idempotency, and why does it matter when designing REST APIs?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Medium",
+    "explanation": "An idempotent operation produces the same result no matter how many times it's performed. GET, PUT, and DELETE are expected to be idempotent, while POST typically is not. This matters because clients may retry requests after network failures — if an API isn't idempotent, a retried POST could create duplicate resources (e.g. charging a customer twice), so systems often use idempotency keys to prevent this.",
+    "follow_up": "How would you implement idempotency for a payment creation POST endpoint?"
+  },
+  {
+    "id": "q031",
+    "question": "What is the difference between map() and flatMap() in Java Streams?",
+    "topic": "Java 8+ Features",
+    "difficulty": "Medium",
+    "explanation": "map() transforms each element into another single object (a 1-to-1 mapping), returning a Stream of the new type. flatMap() transforms each element into its own Stream and then flattens all those streams into one combined stream (a 1-to-many mapping followed by flattening). Use flatMap when each input element can produce zero, one, or many output elements — for example, flattening a List<List<Integer>> into a single Stream<Integer>.",
+    "follow_up": "How would you use flatMap to flatten a List<List<String>> into a single List<String>?"
+  },
+  {
+    "id": "q032",
+    "question": "What is a functional interface, and how does it relate to lambda expressions?",
+    "topic": "Java 8+ Features",
+    "difficulty": "Easy",
+    "explanation": "A functional interface is an interface with exactly one abstract method, optionally marked with @FunctionalInterface (it may still have default or static methods). Lambda expressions provide a concise, inline way to implement that single abstract method without writing an anonymous class. Common examples are Runnable, Comparator, and the java.util.function types like Function, Predicate, Supplier, and Consumer.",
+    "follow_up": "What's the difference between Function<T,R> and BiFunction<T,U,R>?"
+  },
+  {
+    "id": "q033",
+    "question": "What problem does Optional solve, and how should it be used?",
+    "topic": "Java 8+ Features",
+    "difficulty": "Medium",
+    "explanation": "Optional<T> is a container that may or may not hold a non-null value, making the possibility of 'no result' explicit in a method's return type instead of silently returning null. Callers handle the absence safely via isPresent(), ifPresent(), map(), or orElse() instead of risking a NullPointerException. It's intended mainly as a return type — using it as a class field or method parameter is generally discouraged.",
+    "follow_up": "Why is it generally discouraged to use Optional as a class field?"
+  },
+  {
+    "id": "q034",
+    "question": "What is type erasure in Java generics?",
+    "topic": "Generics",
+    "difficulty": "Medium",
+    "explanation": "Type erasure means generic type parameters exist only at compile time for type-checking; the compiler erases them and replaces them with their bound (or Object if unbounded) in the compiled bytecode. This is why you can't call `new T()`, can't use `instanceof` with a parameterized type like `instanceof List<String>`, and why List<String> and List<Integer> share the exact same runtime Class object.",
+    "follow_up": "Why can't you create an array of a generic type, like `new T[10]`?"
+  },
+  {
+    "id": "q035",
+    "question": "What's the difference between `List<? extends T>` and `List<? super T>`?",
+    "topic": "Generics",
+    "difficulty": "Hard",
+    "explanation": "`List<? extends T>` (an upper-bounded wildcard) lets you safely read elements as T, but not add to it (since the actual type could be any subtype of T), making it good for producing/reading data. `List<? super T>` (a lower-bounded wildcard) lets you safely write T or its subtypes into the list, but reading only guarantees an Object, making it good for consuming/writing data. This is summarized by the mnemonic PECS: Producer Extends, Consumer Super.",
+    "follow_up": "Can you give an example of PECS in action, like in the signature of Collections.copy()?"
+  },
+  {
+    "id": "q036",
+    "question": "Why is the String class immutable in Java?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Easy",
+    "explanation": "String is immutable so instances can be safely shared and cached in the string pool without defensive copying, used safely as a HashMap key (its hash code is computed once and cached), and passed between threads without synchronization. Once created, a String's internal character data is never modified — methods like concat() or replace() return a brand-new String rather than changing the original.",
+    "follow_up": "Why is it inefficient to concatenate strings in a loop using +, and what should you use instead?"
+  },
+  {
+    "id": "q037",
+    "question": "What is the difference between final, finally, and finalize()?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Easy",
+    "explanation": "final is a modifier that makes a variable a constant, a method non-overridable, or a class non-extendable. finally is a block that always runs after a try/catch, typically used for cleanup, regardless of whether an exception occurred. finalize() was a deprecated Object method the garbage collector could call before reclaiming an object's memory, but it's unreliable and has been replaced by try-with-resources and the Cleaner API.",
+    "follow_up": "Why was finalize() deprecated, and what's the modern replacement for resource cleanup?"
+  },
+  {
+    "id": "q038",
+    "question": "What is try-with-resources, and why is it preferred over closing resources in a finally block?",
+    "topic": "OOP & Core Java",
+    "difficulty": "Medium",
+    "explanation": "try-with-resources automatically closes any resource implementing AutoCloseable when the try block exits, whether normally or via an exception, without an explicit finally block. It's preferred because it's less verbose, avoids bugs from forgetting to close a resource, and correctly attaches (as a 'suppressed' exception) any exception thrown during close() to the original exception, instead of silently discarding one.",
+    "follow_up": "What happens if both the try block and the resource's close() method throw exceptions?"
+  },
+  {
+    "id": "q039",
+    "question": "What does the volatile keyword do in Java?",
+    "topic": "Multithreading",
+    "difficulty": "Medium",
+    "explanation": "volatile ensures that reads and writes to a variable go directly to main memory instead of a thread's local CPU cache, so a change made by one thread becomes immediately visible to other threads. It also prevents certain instruction reordering around the variable. However, it does not make compound operations like i++ atomic — for that you still need synchronization or a class like AtomicInteger.",
+    "follow_up": "Why doesn't marking a counter variable volatile make i++ thread-safe?"
+  },
+  {
+    "id": "q040",
+    "question": "What is a deadlock, and how can it be avoided?",
+    "topic": "Multithreading",
+    "difficulty": "Medium",
+    "explanation": "A deadlock happens when two or more threads each hold a lock the other is waiting for, so none can proceed — e.g. Thread A holds Lock1 and waits for Lock2, while Thread B holds Lock2 and waits for Lock1. It can be avoided by always acquiring locks in a consistent global order, using tryLock() with a timeout instead of blocking indefinitely, minimizing the number of locks held at once, or using higher-level concurrency utilities that avoid manual locking altogether.",
+    "follow_up": "How would you detect a deadlock in a running Java application?"
+  },
+  {
+    "id": "q041",
+    "question": "What is ExecutorService, and why is it preferred over creating threads manually?",
+    "topic": "Multithreading",
+    "difficulty": "Medium",
+    "explanation": "ExecutorService is a higher-level framework that manages a pool of worker threads and lets you submit tasks (Runnable or Callable) to run asynchronously, instead of manually creating a `new Thread()` for every task. It's preferred because thread creation is expensive, uncontrolled thread creation can exhaust system resources, and ExecutorService provides thread reuse, task queuing, lifecycle management, and easy result retrieval via Future.",
+    "follow_up": "What's the difference between submit() and execute() on an ExecutorService?"
+  },
+  {
+    "id": "q042",
+    "question": "What are the main memory areas of the JVM?",
+    "topic": "JVM Internals",
+    "difficulty": "Medium",
+    "explanation": "The Heap stores all objects and is shared across threads, split into Young and Old generations for garbage collection. The Stack is per-thread and stores method call frames and local variables. Metaspace (which replaced PermGen since Java 8) stores class metadata. Each thread also has a PC Register tracking its current instruction, plus a native method stack for calls into non-Java code.",
+    "follow_up": "What causes a StackOverflowError versus an OutOfMemoryError, and where does each occur?"
+  },
+  {
+    "id": "q043",
+    "question": "Why does the JVM collect the Young generation more often than the Old generation?",
+    "topic": "JVM Internals",
+    "difficulty": "Medium",
+    "explanation": "Most objects die young, so the Young generation (split into Eden and two Survivor spaces) is collected frequently with a fast 'minor GC' that copies surviving objects between survivor spaces and promotes long-lived ones to the Old generation. The Old generation holds long-lived objects and is collected less often via a slower 'major/full GC', since scanning it is far more expensive. This generational strategy is based on the observed fact that most objects have a short lifespan.",
+    "follow_up": "What is a 'stop-the-world' pause, and why do garbage collectors need it?"
+  },
+  {
+    "id": "q044",
+    "question": "What are Spring profiles, and why would you use them?",
+    "topic": "Spring Boot",
+    "difficulty": "Easy",
+    "explanation": "Spring profiles let you define different sets of beans or configuration for different environments — like dev, test, and prod — and activate only the relevant one via the `spring.profiles.active` property. This means environment-specific settings, such as a different datasource for local development versus production, can be swapped without changing any code, just by switching which profile is active.",
+    "follow_up": "How would you conditionally load a bean only when a specific profile is active?"
+  },
+  {
+    "id": "q045",
+    "question": "What does @ControllerAdvice do, and how is it used for exception handling?",
+    "topic": "Spring Boot",
+    "difficulty": "Medium",
+    "explanation": "@ControllerAdvice defines a global component that can intercept exceptions thrown by any @Controller in the application, instead of handling them individually inside every controller. Combined with @ExceptionHandler methods inside it, you can map specific exception types to consistent HTTP responses — for example, returning a 404 with a custom error body whenever a NotFoundException is thrown anywhere in the app.",
+    "follow_up": "How would you return a custom JSON error response with a specific HTTP status code from an @ExceptionHandler?"
+  },
+  {
+    "id": "q046",
+    "question": "What is an API Gateway, and what problems does it solve in a microservices architecture?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Medium",
+    "explanation": "An API Gateway is a single entry point that sits in front of multiple microservices, routing client requests to the appropriate backend service. It solves problems like clients needing to know the location of every individual service, duplicating cross-cutting concerns like auth, rate limiting, and logging in every service, and the need for protocol translation or aggregating responses from multiple services into one client-facing response.",
+    "follow_up": "What's the difference between an API Gateway and a plain load balancer?"
+  },
+  {
+    "id": "q047",
+    "question": "What is the CAP theorem, and why can't a distributed system guarantee all three properties?",
+    "topic": "Microservices & System Design",
+    "difficulty": "Hard",
+    "explanation": "The CAP theorem states a distributed data store can only guarantee two of three properties at once: Consistency (every read returns the latest write), Availability (every request gets a response, even if it's not the latest data), and Partition tolerance (the system keeps working despite network failures between nodes). Since network partitions are unavoidable in real distributed systems, in practice you're choosing between consistency and availability whenever a partition actually occurs.",
+    "follow_up": "Would you classify a typical SQL database with synchronous replication as CP or AP, and why?"
+  },
+  {
+    "id": "q048",
+    "question": "What is database indexing, and what's the trade-off of adding an index?",
+    "topic": "SQL & Databases",
+    "difficulty": "Medium",
+    "explanation": "An index is a separate data structure, commonly a B-tree, that stores a sorted reference to column values so the database can find matching rows without scanning the entire table. The trade-off is that indexes speed up reads and lookups but slow down writes (INSERT/UPDATE/DELETE) because the index itself must also be updated, and they consume additional disk space.",
+    "follow_up": "When would adding an index actually hurt query performance instead of helping?"
+  },
+  {
+    "id": "q049",
+    "question": "What does ACID mean in the context of database transactions?",
+    "topic": "SQL & Databases",
+    "difficulty": "Medium",
+    "explanation": "ACID stands for Atomicity (a transaction's operations either all succeed or all fail together, with no partial state), Consistency (a transaction moves the database from one valid state to another while respecting its constraints), Isolation (concurrent transactions don't interfere with each other's intermediate state), and Durability (once committed, a transaction's changes survive even a system crash). Together they guarantee reliable transaction processing.",
+    "follow_up": "What isolation level would you use to prevent a 'dirty read', and what does that mean?"
+  },
+  {
+    "id": "q050",
+    "question": "What is the difference between a stable and an unstable sorting algorithm?",
+    "topic": "DSA",
+    "difficulty": "Medium",
+    "explanation": "A stable sort preserves the relative order of elements that compare as equal — two records with the same key stay in their original relative order after sorting. Merge sort and insertion sort are stable; standard quicksort and heapsort typically are not, though they can be made stable with extra bookkeeping. Stability matters when sorting by one key but needing to preserve an earlier order for ties, such as sorting already-name-sorted records by department while keeping names alphabetical within each department.",
+    "follow_up": "Why is merge sort stable but the standard in-place quicksort partitioning is not?"
+  }
+]

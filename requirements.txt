@@ -1,0 +1,8 @@
+langchain
+langchain-core
+langchain-text-splitters
+langchain-google-genai
+google-generativeai
+fastapi
+uvicorn[standard]
+python-dotenv
