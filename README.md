@@ -1,4 +1,4 @@
-# Interview Question Similarity Bot
+# Java Questions Bot
 
 A domain-specific chatbot that helps a Java developer practice for interviews.
 It has two ways to interact with it:
