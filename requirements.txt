@@ -3,6 +3,7 @@ langchain-core
 langchain-text-splitters
 langchain-google-genai
 google-generativeai
+numpy
 fastapi
 uvicorn[standard]
 python-dotenv
